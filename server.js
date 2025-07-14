@@ -10,21 +10,35 @@ const fileRoutes = require("./routes/fileRoutes");
 
 dotenv.config();
 const app = express();
-app.use(cors());
+
+// ✅ Configure CORS to allow your frontend URL
+app.use(
+  cors({
+    origin: "https://cloudvault-frontend.onrender.com", // 🔁 Replace with your actual frontend URL
+    credentials: true,
+  })
+);
+
+// ✅ Middleware
 app.use(express.json());
 app.use(fileUpload({ useTempFiles: true }));
 
+// ✅ Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log("✅ MongoDB connected"));
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
 
+// ✅ API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/records", recordRoutes);
 app.use("/api/files", fileRoutes);
 
-app.listen(process.env.PORT || 5000, () => {
-  console.log("🚀 Server is running...");
+// ✅ Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server is running on port ${PORT}`);
 });
