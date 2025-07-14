@@ -32,6 +32,10 @@ mongoose
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "CloudVault Backend API is running!" });
+});
+
 // ✅ API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/records", recordRoutes);
